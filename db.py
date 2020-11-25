@@ -70,7 +70,7 @@ def getWordSet(data):
     return getDB(sql, (data['wordSet'], data['subWordSet']))
 
 def getExamWords(wordSetId, subWordSetId):
-    sql = 'SELECT word, meaning FROM Word WHERE  wordSetId = %s AND subWordSetId = %s'
+    sql = 'SELECT word, meaning FROM Word WHERE wordSetId = %s AND subWordSetId = %s'
     return getDB(sql, (wordSetId, subWordSetId))
 
 def setExamWords(word, meaning):
@@ -84,6 +84,18 @@ def deleteExam():
 def getExam():
     sql = 'SELECT * from Exam'
     return getDB(sql, ())
+
+def getUser(userId):
+    sql = 'SELECT * from User WHERE userId = %s'
+    return getDB(sql, (userId))
+
+def setUser(userId):
+    sql = 'INSERT INTO User (userId) VALUES (%s)'
+    setDB(sql, (userId))
+
+def setToken(userId, token):
+    sql = 'INSERT INTO User (userId, token) VALUES (%s, %s)'
+    setDB(sql, (userId, token))
 
 if __name__ == '__main__':
     # p(getCalendar('개강'))

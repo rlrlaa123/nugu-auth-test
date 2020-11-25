@@ -2,6 +2,7 @@
 from flask import Flask, request, json
 import db
 import nugu
+import auth
 
 readCount = 1
 
@@ -38,6 +39,25 @@ def examStart():
     subWordSet = 'Chapter 2'
     wordSetId = 1
     subWordSetId = 2
+
+    # token parsing
+    data = json.loads(request.get_data().decode('utf8').replace("'", '"'))
+    token = data['context']['session']['accessToken']
+
+    # 회원인지 확인 -> POST https://api.github.com/user
+    url = "https://api.github.com/user"
+    userId = auth.requestUser(url, token)
+
+    # response에 type이 어떤지 알아봐야 함.
+    # response 값에 따라 user DB 구
+    # 회원 없으면,
+    if db.getUser(userId) != '':
+        # 회원 DB에 등록
+        db.setUser(userId)
+    # 회원 있으면,
+    else:
+        # token만 저장
+        db.setToken(userId, token)
 
     # exam table flush
     db.deleteExam()
